@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
   id: text("id").primaryKey(),
@@ -9,7 +9,7 @@ export const usersTable = pgTable("users", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  roleId: text("role_id")
+  roleId: uuid("role_id")
     .notNull()
     .references(() => rolesTable.id, { onDelete: "cascade" }),
 });
@@ -55,7 +55,7 @@ export const verificationsTable = pgTable("verifications", {
 });
 
 export const rolesTable = pgTable("roles", {
-  id: text("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

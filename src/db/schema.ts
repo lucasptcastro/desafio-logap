@@ -9,9 +9,9 @@ export const usersTable = pgTable("users", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  roleId: uuid("role_id")
-    .notNull()
-    .references(() => rolesTable.id, { onDelete: "cascade" }),
+  roleId: uuid("role_id").references(() => rolesTable.id, {
+    onDelete: "restrict",
+  }),
 });
 
 export const sessionsTable = pgTable("sessions", {

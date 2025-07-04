@@ -118,13 +118,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/usuarios"}>
-                  <Link href="/usuarios">
+                <SidebarMenuButton asChild isActive={pathname === "/users"}>
+                  <Link href="/users">
                     <UserCog
-                      className={`${pathname === "/usuarios" ? "text-[#0B68F7]" : "text-[#5B7189]"}`}
+                      className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"}`}
                     />
                     <span
-                      className={`${pathname === "/usuarios" ? "text-[#0B68F7]" : "text-[#5B7189]"} font-semibold`}
+                      className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"} font-semibold`}
                     >
                       Usuários
                     </span>

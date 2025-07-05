@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Tarefa 01: Criação de uma aplicação Web
+O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedidos de clientes e acompanhar as vendas de forma eficiente. Seu desafio será desenvolver uma aplicação web que atenda a essa necessidade.
 
-## Getting Started
+#### Autenticação e Controle de Acesso
 
-First, run the development server:
+- [ ] Implementação de login seguro utilizando JWT
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+#### Diferentes perfis de usuário com permissões específicas:
+- [ ] Administrador: acesso total ao sistema e gestão de usuários
+- [ ] Cliente: pode visualizar a lista de produtos e realizar pedidos
+- [ ] Vendedor: gerencia o estoque e aprova ou rejeita pedidos
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Gestão de Pedidos: 
+- [ ] Os pedidos devem ser acompanhados pelo sistema e conter um status atualizado (ex: "Em andamento", "Finalizado", "Cancelado").
+- [ ] Todas as vendas devem ser registradas e armazenadas no banco de dados.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Visão Gerencial: 
+- [ ] A aplicação deve exibir relatórios e/ou gráficos dinâmicos contendo:
+- [ ] Resumo das vendas (total de pedidos, valor faturado, produtos vendidos).
+- [ ] Pedidos pendentes
+- [ ] Clientes mais ativos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ #### Qualidade e Manutenibilidade:
+- [ ] O projeto deve seguir boas práticas de organização de código e estruturação do repositório.
+- [ ] Deve conter testes unitários e testes de integração para garantir a confiabilidade da aplicação.
 
-## Learn More
+## Tarefa 2: CI/CD
+Após a criação da aplicação, será necessário configurar um processo automatizado de Integração Contínua e Entrega Contínua (CI/CD) para disponibilizá-la na internet.
 
-To learn more about Next.js, take a look at the following resources:
+#### Requisitos Obrigatórios:
+- [ ] Criar uma pipeline de CI/CD utilizando ferramentas como GitHub Actions, GitLab CI, Jenkins ou similares.
+- [ ] A pipeline deve conter pelo menos três etapas principais:
+- [ ] Build: Compilação e empacotamento da aplicação.
+- [ ] Dockerização: Criação de um Dockerfile funcional e, opcionalmente, um docker-compose.
+- [ ] Deploy: Publicação automática da aplicação em um ambiente de nuvem (ex: AWS, Azure, Vercel, Render, Heroku).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Diferenciais (Extras - Não Obrigatórios, Mas Valorizados):
+- [ ] Adicionar etapas para execução automatizada de testes dentro da pipeline.
+- [ ] Incluir ferramentas de análise de qualidade de código
+- [ ] Implementar verificação de segurança antes do deploy
+- [ ] Configuração de diferentes pipelines para desenvolvimento, homologação e produção
+- [ ] Configuração de logs estruturados e alertas automatizados em caso de falha na execução da pipeline
+- [ ] Implementação de métricas e dashboards para monitoramento da aplicação

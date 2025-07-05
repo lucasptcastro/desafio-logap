@@ -2,11 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { addUserRole } from "@/actions/add-user-role";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -24,6 +26,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { rolesTable } from "@/db/schema";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
@@ -33,19 +43,26 @@ const formSchema = z.object({
     .trim()
     .min(1, { message: "Email é obrigatório" })
     .email({ message: "Email inválido" }),
+  role: z.string().uuid().min(1, { message: "Perfil é obrigatório" }),
 });
 
-interface UpsertUserFormProps {
+interface CreateUserFormProps {
   isOpen: boolean;
   onSuccess?: () => void;
+  roles: (typeof rolesTable.$inferSelect)[];
 }
 
-export const CreateUserForm = ({ isOpen, onSuccess }: UpsertUserFormProps) => {
+export const CreateUserForm = ({
+  isOpen,
+  onSuccess,
+  roles,
+}: CreateUserFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
+      role: "",
     },
   });
 
@@ -54,6 +71,16 @@ export const CreateUserForm = ({ isOpen, onSuccess }: UpsertUserFormProps) => {
       form.reset();
     }
   }, [isOpen, form]);
+
+  const addUserRoleAction = useAction(addUserRole, {
+    onSuccess: () => {
+      toast.success("Usuário criado com sucesso");
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar usuário");
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // função assíncrona usando a instância do better-auth para criar um usuário com email e senha
@@ -64,10 +91,11 @@ export const CreateUserForm = ({ isOpen, onSuccess }: UpsertUserFormProps) => {
         password: "Teste123@",
       },
       {
-        // função para redirecionar o usuário para a página de dashboard após o cadastro em caso de sucesso
-        onSuccess: () => {
-          onSuccess?.();
-          toast.success("Usuário criado com sucesso!");
+        onSuccess: ({ data }) => {
+          addUserRoleAction.execute({
+            userId: data.user.id,
+            roleId: values.role,
+          });
         },
         onError: (ctx) => {
           if (ctx.error.code === "USER_ALREADY_EXISTS") {
@@ -75,7 +103,7 @@ export const CreateUserForm = ({ isOpen, onSuccess }: UpsertUserFormProps) => {
             return;
           }
 
-          toast.error("Erro ao criar conta");
+          toast.error("Erro ao criar usuário");
         },
       },
     );
@@ -118,6 +146,33 @@ export const CreateUserForm = ({ isOpen, onSuccess }: UpsertUserFormProps) => {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Perfil</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione um perfil" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {roles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

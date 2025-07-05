@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { DataTable } from "@/components/ui/data-table";
 import {
   PageActions,
   PageContainer,
@@ -18,9 +19,11 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
+import { db } from "@/db";
 import { auth } from "@/lib/auth";
 
 import AddUserButton from "./_components/add-user-button";
+import { usersTableColumns } from "./_components/table-columns";
 
 export default async function UsersPage() {
   const session = await auth.api.getSession({
@@ -30,6 +33,10 @@ export default async function UsersPage() {
   if (!session?.user) {
     redirect("/login");
   }
+
+  const users = await db.query.usersTable.findMany();
+
+  const roles = await db.query.rolesTable.findMany();
 
   return (
     <PageContainer>
@@ -58,13 +65,13 @@ export default async function UsersPage() {
         </PageHeaderContent>
 
         <PageActions>
-          <AddUserButton />
+          <AddUserButton roles={roles} />
         </PageActions>
       </PageHeader>
 
       <PageContent>
         <div>
-          {/* <DataTable data={patients} columns={patientsTableColumns} /> */}
+          <DataTable data={users} columns={usersTableColumns} />
         </div>
       </PageContent>
     </PageContainer>

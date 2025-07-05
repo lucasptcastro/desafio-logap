@@ -24,7 +24,6 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
   },
-
-  //... the rest of your config
 });

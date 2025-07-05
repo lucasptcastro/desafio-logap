@@ -9,7 +9,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { DataTable } from "@/components/ui/data-table";
 import {
   PageActions,
   PageContainer,
@@ -23,7 +22,7 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 
 import AddUserButton from "./_components/add-user-button";
-import { usersTableColumns } from "./_components/table-columns";
+import { UsersTableClient } from "./_components/users-table";
 
 export default async function UsersPage() {
   const session = await auth.api.getSession({
@@ -71,7 +70,7 @@ export default async function UsersPage() {
 
       <PageContent>
         <div>
-          <DataTable data={users} columns={usersTableColumns} />
+          <UsersTableClient users={users} roles={roles} />
         </div>
       </PageContent>
     </PageContainer>

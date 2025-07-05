@@ -1,11 +1,16 @@
-import { EditIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { EditIcon, Loader2, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
+import { toast } from "sonner";
 
-// import { deletePatient } from "@/actions/delete-patient";
+import { deleteUser } from "@/actions/delete-user";
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -20,30 +25,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { usersTable } from "@/db/schema";
+import { rolesTable, usersTable } from "@/db/schema";
 
-// import UpsertPatientForm from "./upsert-patient-form";
+import { UpsertUserForm } from "./upsert-user-form";
 
 interface UsersTableActionsProps {
   user: typeof usersTable.$inferSelect;
+  roles?: (typeof rolesTable.$inferSelect)[];
 }
 
-export const UsersTableActions = ({ user }: UsersTableActionsProps) => {
+export const UsersTableActions = ({ user, roles }: UsersTableActionsProps) => {
   const [upsertDialogIsOpen, setUpsertDialogIsOpen] = useState(false);
 
-  //   const deleteUserAction = useAction(deleteUser, {
-  //     onSuccess: () => {
-  //       toast.success("Paciente deletado com sucesso.");
-  //     },
-  //     onError: () => {
-  //       toast.error("Erro ao deletar paciente.");
-  //     },
-  //   });
+  const deleteUserAction = useAction(deleteUser, {
+    onSuccess: () => {
+      toast.success("Usuário deletado com sucesso.");
+    },
+    onError: () => {
+      toast.error("Erro ao deletar usuário.");
+    },
+  });
 
-  //   const handleDeleteUserClick = () => {
-  //     if (!user) return;
-  //     deleteUserAction.execute({ id: user.id });
-  //   };
+  const handleDeleteUserClick = () => {
+    if (!user) return;
+    deleteUserAction.execute({ id: user.id });
+  };
 
   return (
     <>
@@ -71,23 +77,37 @@ export const UsersTableActions = ({ user }: UsersTableActionsProps) => {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Tem certeza que deseja deletar esse paciente?
+                    Tem certeza que deseja excluir esse usuário?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Essa ação não pode ser revertida. Isso irá deletar o
-                    paciente e todas as consultas agendadas.
+                    Essa ação não pode ser revertida. Isso irá excluir o
+                    usuário.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                {/* <AlertDialogFooter>
+                <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeletePatientClick}>
-                    Deletar
+                  <AlertDialogAction
+                    onClick={handleDeleteUserClick}
+                    className="bg-red-500 text-white hover:bg-red-600"
+                  >
+                    {deleteUserAction.isPending ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      "Excluir"
+                    )}
                   </AlertDialogAction>
-                </AlertDialogFooter> */}
+                </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <UpsertUserForm
+          onSuccess={() => setUpsertDialogIsOpen(false)}
+          isOpen={upsertDialogIsOpen}
+          user={user}
+          roles={roles}
+        />
       </Dialog>
     </>
   );

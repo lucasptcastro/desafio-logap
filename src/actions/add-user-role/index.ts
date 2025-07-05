@@ -11,7 +11,8 @@ import { addUserRoleSchema } from "./schema";
 
 export const addUserRole = protectedActionClient
   .schema(addUserRoleSchema)
-  .action(async ({ parsedInput, ctx }) => {
+  .action(async ({ parsedInput }) => {
+    // parsedInput -> dados passados na requisição | ctx -> dados do usuário logado
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.id, parsedInput.userId),
     });
@@ -33,7 +34,7 @@ export const addUserRole = protectedActionClient
       .set({
         roleId: parsedInput.roleId,
       })
-      .where(eq(usersTable.id, ctx.user.id));
+      .where(eq(usersTable.id, parsedInput.userId));
 
     revalidatePath("/users");
   });

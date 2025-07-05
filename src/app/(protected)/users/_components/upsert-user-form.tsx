@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { addUserRole } from "@/actions/add-user-role";
+import { updateUser } from "@/actions/update-user";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -33,44 +34,49 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { rolesTable } from "@/db/schema";
+import { rolesTable, usersTable } from "@/db/schema";
 import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
+  id: z.string(),
   name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
   email: z
     .string()
     .trim()
     .min(1, { message: "Email é obrigatório" })
     .email({ message: "Email inválido" }),
-  role: z.string().uuid().min(1, { message: "Perfil é obrigatório" }),
+  roleId: z.string().min(1, { message: "Perfil é obrigatório" }),
 });
 
-interface CreateUserFormProps {
+interface UpsertUserFormProps {
   isOpen: boolean;
   onSuccess?: () => void;
-  roles: (typeof rolesTable.$inferSelect)[];
+  user?: typeof usersTable.$inferSelect;
+  roles?: (typeof rolesTable.$inferSelect)[];
 }
 
-export const CreateUserForm = ({
+export const UpsertUserForm = ({
   isOpen,
   onSuccess,
+  user,
   roles,
-}: CreateUserFormProps) => {
+}: UpsertUserFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
+    shouldUnregister: true,
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      role: "",
+      id: user?.id ?? "",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+      roleId: user?.roleId ?? "",
     },
   });
 
   useEffect(() => {
     if (isOpen) {
-      form.reset();
+      form.reset(user);
     }
-  }, [isOpen, form]);
+  }, [isOpen, form, user]);
 
   const addUserRoleAction = useAction(addUserRole, {
     onSuccess: () => {
@@ -88,13 +94,13 @@ export const CreateUserForm = ({
       {
         email: values.email,
         name: values.name,
-        password: "Teste123@",
+        password: "BemVindo!",
       },
       {
         onSuccess: ({ data }) => {
           addUserRoleAction.execute({
             userId: data.user.id,
-            roleId: values.role,
+            roleId: values.roleId,
           });
         },
         onError: (ctx) => {
@@ -109,14 +115,47 @@ export const CreateUserForm = ({
     );
   }
 
+  const updateUserAction = useAction(updateUser, {
+    onSuccess: () => {
+      toast.success("Usuário atualizado com sucesso.");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Erro ao atualizar o usuário.");
+    },
+  });
+
+  const onUpdateUser = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+
+    updateUserAction.execute({
+      id: values.id,
+      name: values.name,
+      email: values.email,
+      roleId: values.roleId,
+    });
+  };
+
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Adicionar usuário</DialogTitle>
-        <DialogDescription>Adicione um novo usuário</DialogDescription>
+        <DialogTitle>{user ? user.name : "Adicionar usuário"}</DialogTitle>
+        <DialogDescription>
+          {user
+            ? "Edite as informações desse usuário."
+            : "Adicione um novo usuário."}
+        </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={
+            !user
+              ? form.handleSubmit(onSubmit)
+              : form.handleSubmit(onUpdateUser)
+          }
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="name"
@@ -152,21 +191,18 @@ export const CreateUserForm = ({
           />
           <FormField
             control={form.control}
-            name="role"
+            name="roleId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Perfil</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Selecione um perfil" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {roles.map((role) => (
+                    {roles?.map((role) => (
                       <SelectItem key={role.id} value={role.id}>
                         {role.name}
                       </SelectItem>
@@ -181,13 +217,21 @@ export const CreateUserForm = ({
           <DialogFooter>
             <Button
               type="submit"
+              disabled={
+                !user ? form.formState.isSubmitting : updateUserAction.isPending
+              }
               className="w-full"
-              disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? (
+              {!user ? (
+                form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Criar"
+                )
+              ) : updateUserAction.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Criar usuário"
+                "Atualizar"
               )}
             </Button>
           </DialogFooter>

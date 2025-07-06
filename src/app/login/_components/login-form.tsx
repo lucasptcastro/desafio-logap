@@ -1,12 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { getUserRole } from "@/actions/get-user-role";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,7 +29,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { rolesTable } from "@/db/schema";
 import { authClient } from "@/lib/auth-client";
+
+interface LoginFormProps {
+  roles: (typeof rolesTable.$inferSelect)[];
+}
 
 const loginSchema = z.object({
   email: z
@@ -39,14 +48,22 @@ const loginSchema = z.object({
     .min(8, { message: "A senha deve conter pelo menos 8 caracteres" }),
 });
 
-export function LoginForm() {
-  const router = useRouter();
-
+export function LoginForm({ roles }: LoginFormProps) {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
+    },
+  });
+
+  const getUserRoleAction = useAction(getUserRole, {
+    onSuccess: ({ data }) => {
+      console.log("onSuccess data:", data);
+    },
+    onError: (error) => {
+      toast("Ocorreu um erro ao coletar o perfil");
+      console.error(error);
     },
   });
 
@@ -57,9 +74,7 @@ export function LoginForm() {
         password: values.password,
       },
       {
-        onSuccess: () => {
-          router.push("/dashboard");
-        },
+        onSuccess: async ({ data }) => {},
         onError: () => {
           toast.error("Email ou senha inválidos");
         },

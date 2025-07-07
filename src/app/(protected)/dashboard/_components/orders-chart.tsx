@@ -55,6 +55,41 @@ export function OrdersChart({ dailyOrdersData }: OrdersChartProps) {
     },
   } satisfies ChartConfig;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const CustomTooltip = (props: any) => (
+    <ChartTooltipContent
+      {...props}
+      formatter={(value, name) => {
+        if (name === "revenue") {
+          return (
+            <>
+              <div className="h-3 w-3 rounded bg-[#10B981]" />
+              <span className="text-muted-foreground">Faturamento:</span>
+              <span className="font-semibold">
+                {formatCurrencyInCents(Number(value))}
+              </span>
+            </>
+          );
+        }
+        return (
+          <>
+            <div className="h-3 w-3 rounded bg-[#0B68F7]" />
+            <span className="text-muted-foreground">Pedidos:</span>
+            <span className="font-semibold">{value}</span>
+          </>
+        );
+      }}
+      labelFormatter={(label, payload) => {
+        if (payload && payload[0]) {
+          return dayjs(payload[0].payload?.fulldate).format(
+            "DD/MM/YYYY (dddd)",
+          );
+        }
+        return label;
+      }}
+    />
+  );
+
   return (
     <Card className="h-fit border-[#F4F4F5] shadow-none">
       <CardHeader className="flex flex-row items-center gap-2">
@@ -97,42 +132,7 @@ export function OrdersChart({ dailyOrdersData }: OrdersChartProps) {
               tickFormatter={(value) => formatCurrencyInCents(value)}
             />
             {/* Tooltip personalizado para exibir o faturamento e os agendamentos */}
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  formatter={(value, name) => {
-                    if (name === "revenue") {
-                      return (
-                        <>
-                          <div className="h-3 w-3 rounded bg-[#10B981]" />
-                          <span className="text-muted-foreground">
-                            Faturamento:
-                          </span>
-                          <span className="font-semibold">
-                            {formatCurrencyInCents(Number(value))}
-                          </span>
-                        </>
-                      );
-                    }
-                    return (
-                      <>
-                        <div className="h-3 w-3 rounded bg-[#0B68F7]" />
-                        <span className="text-muted-foreground">Pedidos:</span>
-                        <span className="font-semibold">{value}</span>
-                      </>
-                    );
-                  }}
-                  labelFormatter={(label, payload) => {
-                    if (payload && payload[0]) {
-                      return dayjs(payload[0].payload?.fulldate).format(
-                        "DD/MM/YYYY (dddd)",
-                      );
-                    }
-                    return label;
-                  }}
-                />
-              }
-            />
+            <ChartTooltip content={CustomTooltip} />
             <Area
               yAxisId="left"
               type="monotone"

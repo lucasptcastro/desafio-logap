@@ -9,7 +9,6 @@ import { CartContext } from "@/app/menu/_contexts/cart";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { product, restaurant } from "@/db/schema";
-import { formatCurrency } from "@/helpers/format-currency";
 
 interface ProductDetailsProps {
   product: typeof product.$inferSelect & {

@@ -9,6 +9,7 @@ import { CartContext } from "@/app/menu/_contexts/cart";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { product, restaurant } from "@/db/schema";
+import { formatCurrency } from "@/helpers/format-currency";
 
 interface ProductDetailsProps {
   product: Pick<
@@ -69,7 +70,9 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
           {/* PREÇO E QUANTIDADE */}
           <div className="mt-3 flex items-center justify-between">
-            <h3 className="text-xl font-semibold">{product.price}</h3>
+            <h3 className="text-xl font-semibold">
+              {formatCurrency(product.price)}
+            </h3>
 
             <div className="flex items-center gap-3 text-center">
               <Button

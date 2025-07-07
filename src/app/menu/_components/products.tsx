@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { product } from "@/db/schema";
+import { formatCurrency } from "@/helpers/format-currency";
 
 interface ProductProps {
   products: (typeof product.$inferSelect)[];
@@ -27,7 +28,9 @@ const Products = ({ products }: ProductProps) => {
               {product.description}
             </p>
 
-            <p className="pt-3 text-sm font-semibold">{product.price}</p>
+            <p className="pt-3 text-sm font-semibold">
+              {formatCurrency(product.price)}
+            </p>
           </div>
 
           {/* DIREITA */}

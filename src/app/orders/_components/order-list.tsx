@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { orderStatusEnum } from "@/db/schema";
 import { order, orderProduct, product, restaurant } from "@/db/schema";
+import { formatCurrency } from "@/helpers/format-currency";
 // import { formatCurrency } from "@/helpers/format-currency";
 
 interface OrderListProps {
@@ -98,7 +99,7 @@ const OrderList = ({ orders }: OrderListProps) => {
             </div>
 
             <Separator />
-            <p className="text-sm font-medium">{order.total}</p>
+            <p className="text-sm font-medium">{formatCurrency(order.total)}</p>
           </CardContent>
         </Card>
       ))}

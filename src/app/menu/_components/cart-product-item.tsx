@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useContext } from "react";
 
 import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/helpers/format-currency";
 
 import { CartContext, CartProduct } from "../_contexts/cart";
 
@@ -28,7 +29,7 @@ const CartProductItem = ({ product }: CartItemProps) => {
           {product.name}
         </p>
 
-        <p className="text-sm font-semibold">{product.price}</p>
+        <p className="text-sm font-semibold">{formatCurrency(product.price)}</p>
 
         {/* QUANTIDADE */}
         <div className="flex items-center gap-1 text-center">

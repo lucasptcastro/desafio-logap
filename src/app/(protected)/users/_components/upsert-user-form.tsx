@@ -120,15 +120,12 @@ export const UpsertUserForm = ({
       toast.success("Usuário atualizado com sucesso.");
       onSuccess?.();
     },
-    onError: (error) => {
-      console.log(error);
+    onError: () => {
       toast.error("Erro ao atualizar o usuário.");
     },
   });
 
   const onUpdateUser = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-
     updateUserAction.execute({
       id: values.id,
       name: values.name,

@@ -5,14 +5,14 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { order as ordersTable } from "@/db/schema";
+import { order as ordersTable, orderStatusEnum } from "@/db/schema";
 import { protectedActionClient } from "@/lib/next-safe-action";
 
 export const updateOrder = protectedActionClient
   .schema(
     z.object({
       id: z.number().min(1, { message: "ID é obrigatório" }),
-      status: z.string().trim().min(1, { message: "Status é obrigatório" }),
+      status: z.string().min(1, { message: "Status é obrigatório" }),
     }),
   )
   .action(async ({ parsedInput }) => {
@@ -27,7 +27,8 @@ export const updateOrder = protectedActionClient
     await db
       .update(ordersTable)
       .set({
-        status: parsedInput.status,
+        status:
+          parsedInput.status as (typeof orderStatusEnum.enumValues)[number],
       })
       .where(eq(ordersTable.id, parsedInput.id));
 

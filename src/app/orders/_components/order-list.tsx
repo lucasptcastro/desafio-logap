@@ -31,8 +31,8 @@ const getStatusLabel = (
   status: (typeof orderStatusEnum.enumValues)[number],
 ) => {
   if (status === "FINISHED") return "Finalizado";
-  if (status === "IN_PREPARATION") return "Em preparo";
-  if (status === "PENDING") return "Pendente";
+  if (status === "IN_PREPARATION") return "Em andamento";
+  if (status === "PENDING") return "Cancelado";
   return "";
 };
 
@@ -61,7 +61,7 @@ const OrderList = ({ orders }: OrderListProps) => {
         <Card key={order.id}>
           <CardContent className="space-y-4 p-5">
             <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${order.status === orderStatusEnum.enumValues[0] ? "bg-green-500 text-white" : order.status === orderStatusEnum.enumValues[1] ? "bg-[#f7b731] text-white" : "bg-gray-200 text-gray-500"}`}
+              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${order.status === orderStatusEnum.enumValues[0] ? "bg-red-500 text-white" : order.status === orderStatusEnum.enumValues[1] ? "bg-[#f7b731] text-white" : "bg-gray-200 text-gray-500"}`}
             >
               {getStatusLabel(order.status)}
             </div>

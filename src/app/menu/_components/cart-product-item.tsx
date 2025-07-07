@@ -1,49 +1,65 @@
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useContext } from "react";
 
-import { product } from "@/db/schema";
+import { Button } from "@/components/ui/button";
 
-interface ProductProps {
-  products: (typeof product.$inferSelect)[];
+import { CartContext, CartProduct } from "../_contexts/cart";
+
+interface CartItemProps {
+  product: CartProduct;
 }
 
-const Products = ({ products }: ProductProps) => {
-  const { slug } = useParams<{ slug: string }>();
-  const searchParams = useSearchParams();
-  const consumptionMethod = searchParams.get("consumptionMethod");
+const CartProductItem = ({ product }: CartItemProps) => {
+  const { decreaseProductQuantity, increaseProductQuantity, removeProduct } =
+    useContext(CartContext);
 
   return (
-    <div className="space-y-3 px-5">
-      {products.map((product) => (
-        <Link
-          key={product.id}
-          href={`/${slug}/menu/${product.id}?consumptionMethod=${consumptionMethod}`}
-          className="flex items-center justify-between gap-10 border-b py-3"
-        >
-          {/* ESQUERDA */}
-          <div>
-            <h3 className="text-sm font-medium">{product.name}</h3>
-            <p className="text-muted-foreground line-clamp-2 text-sm">
-              {product.description}
-            </p>
+    <div className="flex items-center justify-between">
+      {/* ESQUERDA */}
+      <div className="flex w-[30%] items-center gap-3">
+        <div className="relative h-20 w-20 rounded-xl bg-gray-100">
+          <Image src={product.imageUrl} alt={product.name} fill />
+        </div>
+      </div>
 
-            <p className="pt-3 text-sm font-semibold">{product.price}</p>
-          </div>
+      <div className="w-[50%] space-y-1">
+        <p className="max-w-[90%] truncate text-xs text-ellipsis">
+          {product.name}
+        </p>
 
-          {/* DIREITA */}
-          <div className="relative min-h-[82px] min-w-[120px]">
-            <Image
-              src={product.imageUrl}
-              alt={product.name}
-              fill
-              className="rounded-lg object-contain"
-            />
-          </div>
-        </Link>
-      ))}
+        <p className="text-sm font-semibold">{product.price}</p>
+
+        {/* QUANTIDADE */}
+        <div className="flex items-center gap-1 text-center">
+          <Button
+            className="h-7 w-7 rounded-lg"
+            variant="outline"
+            onClick={() => decreaseProductQuantity(product.id)}
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <p className="w-7 text-xs">{product.quantity}</p>
+          <Button
+            className="h-7 w-7 rounded-lg"
+            variant="destructive"
+            onClick={() => increaseProductQuantity(product.id)}
+          >
+            <ChevronRightIcon />
+          </Button>
+        </div>
+      </div>
+
+      {/* BOTÃO DE DELETAR */}
+      <Button
+        className="h-7 w-7 rounded-lg"
+        variant="outline"
+        onClick={() => removeProduct(product.id)}
+      >
+        <TrashIcon />
+      </Button>
     </div>
   );
 };
 
-export default Products;
+export default CartProductItem;

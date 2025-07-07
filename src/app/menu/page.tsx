@@ -49,8 +49,6 @@ const RestaurantMenuPage = async ({
     .from(menuCategory)
     .where(eq(menuCategory.restaurantId, restaurantResult[0].id));
 
-  console.log(menuCategories);
-
   // Para cada categoria, busca os produtos
   const menuCategoriesWithProducts = await Promise.all(
     menuCategories.map(async (category) => {

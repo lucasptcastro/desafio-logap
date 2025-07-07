@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { consumptionMethodEnum } from "@/db/schema";
 
 interface ConsumptionMethodOptionProps {
-  slug: string;
   imageUrl: string;
   imageAlt: string;
   buttonText: string;
@@ -14,7 +13,6 @@ interface ConsumptionMethodOptionProps {
 }
 
 const ConsumptionMethodOption = ({
-  slug,
   imageUrl,
   imageAlt,
   buttonText,
@@ -35,9 +33,7 @@ const ConsumptionMethodOption = ({
 
         {/* o asChild serve para que as estilizações do botão sejam aplicadas ao <Link/> porque não é interessante semanticamente ter um link dentro de um botão */}
         <Button variant={"secondary"} className="rounded-full" asChild>
-          <Link href={`/${slug}/menu?consumptionMethod=${option}`}>
-            {buttonText}
-          </Link>
+          <Link href={`/menu?consumptionMethod=${option}`}>{buttonText}</Link>
         </Button>
       </CardContent>
     </Card>

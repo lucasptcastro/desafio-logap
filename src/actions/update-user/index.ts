@@ -12,8 +12,6 @@ import { updateUserSchema } from "./schema";
 export const updateUser = protectedActionClient
   .schema(updateUserSchema)
   .action(async ({ parsedInput }) => {
-    console.log(parsedInput.roleId);
-
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.id, parsedInput.id),
     });

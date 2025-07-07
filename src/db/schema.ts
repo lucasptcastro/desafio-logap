@@ -4,6 +4,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  serial,
   text,
   timestamp,
   uuid,
@@ -127,7 +128,7 @@ export const product = pgTable("product", {
 });
 
 export const order = pgTable("order", {
-  id: integer("id").primaryKey(),
+  id: serial("id").primaryKey().notNull(),
   total: text("total").notNull(),
   status: orderStatusEnum("status").notNull(),
   consumptionMethod: consumptionMethodEnum("consumption_method").notNull(),
@@ -145,7 +146,7 @@ export const orderProduct = pgTable("order_product", {
   productId: uuid("product_id")
     .notNull()
     .references(() => product.id, { onDelete: "cascade" }),
-  orderId: integer("order_id")
+  orderId: serial("order_id")
     .notNull()
     .references(() => order.id, { onDelete: "cascade" }),
   quantity: integer("quantity").notNull(),

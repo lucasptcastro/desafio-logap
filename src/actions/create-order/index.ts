@@ -1,5 +1,4 @@
 "use server";
-// diz que o arquivo terá server actions (funciona como uma espécie de rota de API)
 
 import { eq, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -9,6 +8,7 @@ import { db } from "@/db/index";
 import {
   consumptionMethodEnum,
   order,
+  orderProduct,
   product,
   restaurant as restaurantTable,
 } from "@/db/schema";
@@ -18,13 +18,12 @@ interface CreateOrderInput {
   customerName: string;
   customerCpf: string;
   products: Array<{ id: string; quantity: number }>;
-  consumptionMethod: typeof consumptionMethodEnum;
-  slug: string;
+  consumptionMethod: (typeof consumptionMethodEnum.enumValues)[number];
 }
 
 export const createOrder = async (input: CreateOrderInput) => {
-  const restaurant = await db.query.order.findFirst({
-    where: eq(restaurantTable.slug, input.slug),
+  const restaurant = await db.query.restaurant.findFirst({
+    where: eq(restaurantTable.slug, "mc-logap"),
   });
 
   if (!restaurant) {
@@ -49,28 +48,36 @@ export const createOrder = async (input: CreateOrderInput) => {
     price: productsWithPrices.find((p) => p.id)!.price,
   }));
 
-  // aqui é feita a criação da order diretamente no banco
-  await db.insert(order).values({
-    status: "PENDING",
-    CustomerName: input.customerName,
-    CustomerCpf: removeCpfPunctuation(input.customerCpf),
-    OrderProduct: {
-      createMany: {
-        data: productsWithPricesAndQuantities,
-      },
-    },
-    total: productsWithPricesAndQuantities.reduce(
-      (acc, product) => acc + product.price * product.quantity,
-      0,
-    ),
-    consumptionMethod: input.consumptionMethod,
-    restaurantId: restaurant.id,
-  });
+  // 1. Crie o pedido (order)
+  const [createdOrder] = await db
+    .insert(order)
+    .values({
+      status: "PENDING",
+      customerName: input.customerName,
+      customerCpf: removeCpfPunctuation(input.customerCpf),
+      total: String(
+        productsWithPricesAndQuantities.reduce(
+          (acc, product) => acc + product.price * product.quantity,
+          0,
+        ),
+      ),
+      consumptionMethod: input.consumptionMethod,
+      restaurantId: restaurant.id,
+    })
+    .returning();
+
+  // 2. Crie os produtos do pedido (orderProduct)
+  await db.insert(orderProduct).values(
+    productsWithPricesAndQuantities.map((product) => ({
+      orderId: createdOrder.id,
+      productId: product.productId,
+      quantity: product.quantity,
+      price: product.price,
+    })),
+  );
 
   // serve para guardar as informações da tela em cache
-  revalidatePath(`/${input.slug}/orders`);
+  revalidatePath(`/orders`);
 
-  redirect(
-    `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
-  );
+  redirect(`/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`);
 };

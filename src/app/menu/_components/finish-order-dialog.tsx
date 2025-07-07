@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useContext, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
@@ -52,8 +52,6 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
-  const { slug } = useParams<{ slug: string }>();
-
   const searchParams = useSearchParams();
 
   // o useTransition faz com que a variável isPending seja falsa até que um bloco tenha sido finalizado
@@ -74,7 +72,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
     try {
       const consumptionMethod = searchParams.get(
         "consumptionMethod",
-      ) as typeof consumptionMethodEnum;
+      ) as (typeof consumptionMethodEnum.enumValues)[number];
 
       // o startTransition altera o valor do isPending para true quando todo o bloco que está dentro dele for finalizado (muito útil para usar com componentes de loading)
       startTransition(async () => {
@@ -83,7 +81,6 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
           customerCpf: data.cpf,
           customerName: data.name,
           products: products,
-          slug: slug,
         });
 
         onOpenChange(false);

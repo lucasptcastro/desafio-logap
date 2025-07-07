@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { product } from "@/db/schema";
 
@@ -9,7 +9,6 @@ interface ProductProps {
 }
 
 const Products = ({ products }: ProductProps) => {
-  const { slug } = useParams<{ slug: string }>();
   const searchParams = useSearchParams();
   const consumptionMethod = searchParams.get("consumptionMethod");
 
@@ -18,7 +17,7 @@ const Products = ({ products }: ProductProps) => {
       {products.map((product) => (
         <Link
           key={product.id}
-          href={`/${slug}/menu/${product.id}?consumptionMethod=${consumptionMethod}`}
+          href={`/menu/${product.id}?consumptionMethod=${consumptionMethod}`}
           className="flex items-center justify-between gap-10 border-b py-3"
         >
           {/* ESQUERDA */}

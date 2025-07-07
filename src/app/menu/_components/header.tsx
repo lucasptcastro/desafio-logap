@@ -2,7 +2,7 @@
 
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { restaurant } from "@/db/schema";
@@ -13,11 +13,9 @@ interface RestaurantHeaderProps {
 }
 
 const RestaurantHeader = ({ restaurant }: RestaurantHeaderProps) => {
-  const { slug } = useParams<{ slug: string }>();
-
   const router = useRouter();
 
-  const handleOrdersClick = () => router.push(`/${slug}/orders`);
+  const handleOrdersClick = () => router.push(`/orders`);
 
   return (
     <div className="relative h-[250px] w-full">

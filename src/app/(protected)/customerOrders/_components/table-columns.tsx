@@ -1,0 +1,84 @@
+"use client";
+
+import { ColumnDef } from "@tanstack/react-table";
+import clsx from "clsx";
+
+import { Badge } from "@/components/ui/badge";
+import { order } from "@/db/schema";
+
+import { CustomerOrdersTableActions } from "./table-actions";
+
+type CustomerOrder = typeof order.$inferSelect;
+
+export const customerOrdersTableColumns: ColumnDef<CustomerOrder>[] = [
+  {
+    id: "id",
+    accessorKey: "id",
+    header: "Nº Pedido",
+  },
+  {
+    id: "customerCpf",
+    accessorKey: "customerCpf",
+    header: "CPF",
+  },
+  {
+    id: "customerName",
+    accessorKey: "customerName",
+    header: "Cliente",
+  },
+  {
+    id: "consumptionMethod",
+    accessorKey: "consumptionMethod",
+    header: "Método de Consumo",
+    cell: (params) => {
+      return (
+        <Badge
+          className={clsx("", {
+            "bg-blue-100 text-blue-500":
+              params.row.original.consumptionMethod === "DINE_IN",
+            "bg-green-100 text-green-500":
+              params.row.original.consumptionMethod === "TAKEAWAY",
+          })}
+        >
+          {params.row.original.consumptionMethod === "DINE_IN"
+            ? "No Restaurante"
+            : ""}
+          {params.row.original.consumptionMethod === "TAKEAWAY"
+            ? "Para Viagem"
+            : ""}
+        </Badge>
+      );
+    },
+  },
+  {
+    id: "statys",
+    accessorKey: "status",
+    header: "Status",
+    cell: (params) => {
+      return (
+        <Badge
+          className={clsx("", {
+            "bg-red-100 text-red-500": params.row.original.status === "PENDING",
+            "bg-yellow-100 text-yellow-500":
+              params.row.original.status === "IN_PREPARATION",
+            "bg-green-100 text-green-500":
+              params.row.original.status === "FINISHED",
+          })}
+        >
+          {params.row.original.status === "PENDING" ? "Cancelado" : ""}
+          {params.row.original.status === "IN_PREPARATION"
+            ? "Em andamento"
+            : ""}
+          {params.row.original.status === "FINISHED" ? "Finalizado" : ""}
+        </Badge>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: (params) => {
+      const order = params.row.original;
+      return <CustomerOrdersTableActions order={order} />;
+    },
+  },
+];

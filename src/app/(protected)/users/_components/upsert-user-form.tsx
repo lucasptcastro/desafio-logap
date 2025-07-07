@@ -74,7 +74,12 @@ export const UpsertUserForm = ({
 
   useEffect(() => {
     if (isOpen) {
-      form.reset(user);
+      form.reset({
+        id: user?.id ?? "",
+        name: user?.name ?? "",
+        email: user?.email ?? "",
+        roleId: user?.roleId ?? "",
+      });
     }
   }, [isOpen, form, user]);
 

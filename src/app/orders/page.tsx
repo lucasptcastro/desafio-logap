@@ -22,7 +22,7 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
     return <CpfForm />;
   }
 
-  const ordersRaw = await db
+  const ordersList = await db
     .select({
       order,
       restaurant: {
@@ -32,8 +32,8 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
       OrderProduct: {
         id: orderProduct.id,
         quantity: orderProduct.quantity,
-        product: product,
       },
+      product: product,
     })
     .from(order)
     .where(eq(order.customerCpf, removeCpfPunctuation(cpf)))
@@ -44,20 +44,20 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
 
   const ordersMap = new Map();
 
-  for (const row of ordersRaw) {
-    const orderId = row.order.id;
+  for (const item of ordersList) {
+    const orderId = item.order.id;
     if (!ordersMap.has(orderId)) {
       ordersMap.set(orderId, {
-        ...row.order,
-        restaurant: row.restaurant,
+        ...item.order,
+        restaurant: item.restaurant,
         OrderProduct: [],
       });
     }
     // Só adiciona se houver produto
-    if (row.OrderProduct && row.OrderProduct.id) {
+    if (item.OrderProduct && item.OrderProduct.id) {
       ordersMap.get(orderId).OrderProduct.push({
-        ...row.OrderProduct,
-        product: row.OrderProduct.product,
+        ...item.OrderProduct,
+        product: item.product,
       });
     }
   }

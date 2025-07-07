@@ -47,7 +47,7 @@ export const pendingOrdersTableColumns: ColumnDef<PendingOrder>[] = [
           className={clsx("", {
             "bg-blue-100 text-blue-500":
               params.row.original.consumptionMethod === "DINE_IN",
-            "bg-green-100 text-green-500":
+            "bg-purple-100 text-purple-500":
               params.row.original.consumptionMethod === "TAKEAWAY",
           })}
         >

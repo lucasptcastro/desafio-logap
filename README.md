@@ -8,7 +8,7 @@ O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedido
 
 #### Diferentes perfis de usuário com permissões específicas:
 
-- [x] Administrador: acesso total ao sistema e gestão de usuários
+- [ ] Administrador: acesso total ao sistema e gestão de usuários
 - [x] Cliente: pode visualizar a lista de produtos e realizar pedidos
 - [x] Vendedor: gerencia o estoque e aprova ou rejeita pedidos
 
@@ -19,14 +19,14 @@ O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedido
 
 #### Visão Gerencial:
 
-- [ ] A aplicação deve exibir relatórios e/ou gráficos dinâmicos contendo:
+- [x] A aplicação deve exibir relatórios e/ou gráficos dinâmicos contendo:
 - [x] Resumo das vendas (total de pedidos, valor faturado, produtos vendidos).
-- [ ] Pedidos pendentes
-- [ ] Clientes mais ativos
+- [x] Pedidos pendentes
+- [x] Clientes mais ativos
 
 #### Qualidade e Manutenibilidade:
 
-- [ ] O projeto deve seguir boas práticas de organização de código e estruturação do repositório.
+- [x] O projeto deve seguir boas práticas de organização de código e estruturação do repositório.
 - [ ] Deve conter testes unitários e testes de integração para garantir a confiabilidade da aplicação.
 
 ## Tarefa 2: CI/CD

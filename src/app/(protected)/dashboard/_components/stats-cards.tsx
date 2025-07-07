@@ -1,7 +1,7 @@
 import { DollarSignIcon, Hamburger, ScrollTextIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrencyInCents } from "@/helpers/currency";
+import { formatCurrency } from "@/helpers/format-currency";
 
 interface StatsCardsProps {
   totalRevenue: number | null;
@@ -17,7 +17,7 @@ export function StatsCards({
   const stats = [
     {
       title: "Faturamento",
-      value: totalRevenue ? formatCurrencyInCents(totalRevenue) : "R$ 0,00",
+      value: totalRevenue ? formatCurrency(totalRevenue) : "R$ 0,00",
       icon: DollarSignIcon,
     },
     {

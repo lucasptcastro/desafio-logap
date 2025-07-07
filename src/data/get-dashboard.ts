@@ -23,13 +23,10 @@ export const getDashboard = async ({ from, to }: Params) => {
     [totalOrders],
     [totalProductsSold],
     pendingOrders,
-    // [totalPatients],
-    // [totalDoctors],
-    // topDoctors,
-    // topSpecialties,
-    // todayAppointments,
-    // dailyAppointmentsData,
+    topCustomers,
+    dailyOrdersData,
   ] = await Promise.all([
+    // coleta o faturamento
     db
       .select({
         total: sum(ordersTable.total),
@@ -41,7 +38,7 @@ export const getDashboard = async ({ from, to }: Params) => {
           lte(ordersTable.createdAt, new Date(to)), // lte = less than or equal to (menor ou igual a)
         ),
       ),
-    // coleta a quantidade de agendamentos onde a clínica é a do usuário e a data está entre as datas selecionadas
+    // coleta a quantidade de pedidos
     db
       .select({
         total: count(),
@@ -53,6 +50,7 @@ export const getDashboard = async ({ from, to }: Params) => {
           lte(ordersTable.createdAt, new Date(to)), // lte = less than or equal to (menor ou igual a)
         ),
       ),
+    // coleta a quantidade de produtos vendidos
     db
       .select({
         total: sum(orderProduct.quantity),
@@ -64,59 +62,8 @@ export const getDashboard = async ({ from, to }: Params) => {
           lte(orderProduct.createdAt, new Date(to)), // lte = less than or equal to (menor ou igual a)
         ),
       ),
-    // // coleta a quantidade de pacientes onde a clínica é a do usuário
-    // db
-    //   .select({ total: count() })
-    //   .from(patientsTable)
-    //   .where(eq(patientsTable.clinicId, session.user.clinic.id)),
-    // // coleta a quantidade de médicos onde a clínica é a do usuário
-    // db
-    //   .select({
-    //     total: count(),
-    //   })
-    //   .from(doctorsTable)
-    //   .where(eq(doctorsTable.clinicId, session.user.clinic.id)),
-    // // coleta os 10 médicos que mais possuem agendamentos e ordena de forma decrescente
-    // db
-    //   .select({
-    //     id: doctorsTable.id,
-    //     name: doctorsTable.name,
-    //     avatarImageUrl: doctorsTable.avatarImageUrl,
-    //     specialty: doctorsTable.specialty,
-    //     appointments: count(appointmentsTable.id),
-    //   })
-    //   .from(doctorsTable)
-    //   .leftJoin(
-    //     appointmentsTable,
-    //     and(
-    //       eq(appointmentsTable.doctorId, doctorsTable.id),
-    //       gte(appointmentsTable.date, new Date(from)),
-    //       lte(appointmentsTable.date, new Date(to)),
-    //     ),
-    //   )
-    //   .where(eq(doctorsTable.clinicId, session.user.clinic.id))
-    //   .groupBy(doctorsTable.id)
-    //   .orderBy(desc(count(appointmentsTable.id)))
-    //   .limit(10),
-    // // Coleta os agendamentos por especialidade
-    // db
-    //   .select({
-    //     specialty: doctorsTable.specialty,
-    //     appointments: count(appointmentsTable.id),
-    //   })
-    //   .from(appointmentsTable)
-    //   .innerJoin(doctorsTable, eq(appointmentsTable.doctorId, doctorsTable.id))
-    //   .where(
-    //     and(
-    //       eq(appointmentsTable.clinicId, session.user.clinic.id),
-    //       gte(appointmentsTable.date, new Date(from)),
-    //       lte(appointmentsTable.date, new Date(to)),
-    //     ),
-    //   )
-    //   .groupBy(doctorsTable.specialty)
-    //   .orderBy(desc(count(appointmentsTable.id)))
-    //   .limit(10),
-    // // coleta os agendamentos de hoje
+
+    // coleta os pedidos pendentes
     db.query.order.findMany({
       where: and(
         eq(order.status, "IN_PROGRESS"),
@@ -125,25 +72,34 @@ export const getDashboard = async ({ from, to }: Params) => {
       ),
       orderBy: desc(order.createdAt),
     }),
-    // db
-    //   .select({
-    //     date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
-    //     appointments: count(appointmentsTable.id),
-    //     revenue:
-    //       sql<number>`COALESCE(SUM(${appointmentsTable.appointmentPriceInCents}), 0)`.as(
-    //         "revenue",
-    //       ),
-    //   })
-    //   .from(appointmentsTable)
-    //   .where(
-    //     and(
-    //       eq(appointmentsTable.clinicId, session.user.clinic.id),
-    //       gte(appointmentsTable.date, chartStartDate),
-    //       lte(appointmentsTable.date, chartEndDate),
-    //     ),
-    //   )
-    //   .groupBy(sql`DATE(${appointmentsTable.date})`)
-    //   .orderBy(sql`DATE(${appointmentsTable.date})`),
+
+    // coleta o top 10 clientes que mais compraram
+    db
+      .select({
+        customerName: order.customerName,
+        orders: count(order.id),
+      })
+      .from(order)
+      .groupBy(order.customerName)
+      .orderBy(desc(count(order.id)))
+      .limit(10),
+
+    // coleta os dados diários
+    db
+      .select({
+        date: sql<string>`DATE(${order.createdAt})`.as("date"),
+        orders: count(order.id),
+        revenue: sql<number>`COALESCE(SUM(${order.total}), 0)`.as("revenue"),
+      })
+      .from(order)
+      .where(
+        and(
+          gte(order.createdAt, chartStartDate),
+          lte(order.createdAt, chartEndDate),
+        ),
+      )
+      .groupBy(sql`DATE(${order.createdAt})`)
+      .orderBy(sql`DATE(${order.createdAt})`),
   ]);
 
   return {
@@ -151,12 +107,7 @@ export const getDashboard = async ({ from, to }: Params) => {
     totalOrders,
     totalProductsSold,
     pendingOrders,
-    // totalAppointments,
-    // totalPatients,
-    // totalDoctors,
-    // topDoctors,
-    // topSpecialties,
-    // todayAppointments,
-    // dailyAppointmentsData,
+    topCustomers,
+    dailyOrdersData,
   };
 };

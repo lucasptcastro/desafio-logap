@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { Badge } from "@/components/ui/badge";
 import { order } from "@/db/schema";
 import { cpfMask } from "@/helpers/cpf-mask";
+import { formatCurrency } from "@/helpers/format-currency";
 
 type PendingOrder = typeof order.$inferSelect;
 
@@ -26,6 +27,14 @@ export const pendingOrdersTableColumns: ColumnDef<PendingOrder>[] = [
     header: "CPF",
     cell: (params) => {
       return <span>{cpfMask(params.row.original.customerCpf)}</span>;
+    },
+  },
+  {
+    id: "total",
+    accessorKey: "total",
+    header: "Total",
+    cell: (params) => {
+      return <span>{formatCurrency(params.row.original.total)}</span>;
     },
   },
   {

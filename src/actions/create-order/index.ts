@@ -45,7 +45,7 @@ export const createOrder = async (input: CreateOrderInput) => {
   const productsWithPricesAndQuantities = input.products.map((product) => ({
     productId: product.id,
     quantity: product.quantity,
-    price: productsWithPrices.find((p) => p.id)!.price,
+    price: productsWithPrices.find((p) => p.id === product.id)!.price,
   }));
 
   // 1. Crie o pedido (order)
@@ -55,11 +55,9 @@ export const createOrder = async (input: CreateOrderInput) => {
       status: "IN_PROGRESS",
       customerName: input.customerName,
       customerCpf: removeCpfPunctuation(input.customerCpf),
-      total: String(
-        productsWithPricesAndQuantities.reduce(
-          (acc, product) => acc + product.price * product.quantity,
-          0,
-        ),
+      total: productsWithPricesAndQuantities.reduce(
+        (acc, product) => acc + product.price * product.quantity,
+        0,
       ),
       consumptionMethod: input.consumptionMethod,
       restaurantId: restaurant.id,

@@ -8,7 +8,7 @@ O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedido
 
 #### Diferentes perfis de usuário com permissões específicas:
 
-- [ ] Administrador: acesso total ao sistema e gestão de usuários
+- [x] Administrador: acesso total ao sistema e gestão de usuários
 - [x] Cliente: pode visualizar a lista de produtos e realizar pedidos
 - [x] Vendedor: gerencia o estoque e aprova ou rejeita pedidos
 
@@ -35,11 +35,11 @@ Após a criação da aplicação, será necessário configurar um processo autom
 
 #### Requisitos Obrigatórios:
 
-- [ ] Criar uma pipeline de CI/CD utilizando ferramentas como GitHub Actions, GitLab CI, Jenkins ou similares.
-- [ ] A pipeline deve conter pelo menos três etapas principais:
-- [ ] Build: Compilação e empacotamento da aplicação.
-- [ ] Dockerização: Criação de um Dockerfile funcional e, opcionalmente, um docker-compose.
-- [ ] Deploy: Publicação automática da aplicação em um ambiente de nuvem (ex: AWS, Azure, Vercel, Render, Heroku).
+- [x] Criar uma pipeline de CI/CD utilizando ferramentas como GitHub Actions, GitLab CI, Jenkins ou similares.
+- [x] A pipeline deve conter pelo menos três etapas principais:
+- [x] Build: Compilação e empacotamento da aplicação.
+- [x] Dockerização: Criação de um Dockerfile funcional e, opcionalmente, um docker-compose.
+- [x] Deploy: Publicação automática da aplicação em um ambiente de nuvem (ex: AWS, Azure, Vercel, Render, Heroku).
 
 #### Diferenciais (Extras - Não Obrigatórios, Mas Valorizados):
 

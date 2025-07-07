@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getUserRole } from "@/actions/get-user-role";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/page-container";
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
+import { authClient } from "@/lib/auth-client";
 
 import AddUserButton from "./_components/add-user-button";
 import { UsersTableClient } from "./_components/users-table";
@@ -31,6 +33,28 @@ export default async function UsersPage() {
 
   if (!session?.user) {
     redirect("/login");
+  }
+
+  const userRole = await getUserRole({ userId: session.user.id });
+
+  if (!userRole?.data) {
+    redirect("/login");
+  }
+
+  const userRoleName = userRole.data[0].roleName.toLowerCase();
+
+  if (userRoleName === "vendedor") {
+    redirect("/customerOrders");
+  }
+
+  if (userRoleName !== "administrador") {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          redirect("/login");
+        },
+      },
+    });
   }
 
   const users = await db.query.usersTable.findMany();

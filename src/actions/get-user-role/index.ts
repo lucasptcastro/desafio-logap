@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { usersTable } from "@/db/schema";
+import { rolesTable, usersTable } from "@/db/schema";
 import { protectedActionClient } from "@/lib/next-safe-action";
 
 export const getUserRole = protectedActionClient
@@ -16,8 +16,12 @@ export const getUserRole = protectedActionClient
 
   .action(async ({ parsedInput }) => {
     const user = await db
-      .select({ roleId: usersTable.roleId })
+      .select({
+        roleName: rolesTable.name,
+        roleId: usersTable.roleId,
+      })
       .from(usersTable)
+      .innerJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
       .where(eq(usersTable.id, parsedInput.userId));
 
     return user;

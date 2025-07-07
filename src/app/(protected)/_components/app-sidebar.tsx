@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import {
   LayoutDashboard,
   Loader2,
@@ -33,6 +34,10 @@ import {
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 
+interface AppSidebarProps {
+  userRoleName: string;
+}
+
 // Menu items.
 const items = [
   {
@@ -47,7 +52,7 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ userRoleName }: AppSidebarProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -76,13 +81,15 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b bg-white p-4">
+      <SidebarHeader className="flex flex-row items-center gap-2 border-b bg-white p-4">
         <Image
-          alt="Logo Doutor Agenda"
-          src="/logo.svg"
-          width={136}
-          height={28}
+          alt="Logo MC LogAp"
+          src="/mc-logap.png"
+          className="rounded"
+          width={48}
+          height={48}
         />
+        <span className="font-semibold text-[#1D4382]">MC LogAp</span>
       </SidebarHeader>
 
       <SidebarContent className="bg-white">
@@ -93,7 +100,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem
+                  key={item.title}
+                  className={clsx("", {
+                    hidden:
+                      userRoleName === "vendedor" && item.title === "Dashboard",
+                  })}
+                >
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>
                       <item.icon
@@ -111,29 +124,33 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-[#5B7189]">
-            Configurações
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/users"}>
-                  <Link href="/users">
-                    <UserCog
-                      className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"}`}
-                    />
-                    <span
-                      className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"} font-semibold`}
-                    >
-                      Usuários
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {userRoleName === "administrador" && (
+          <>
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-[#5B7189]">
+                Configurações
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === "/users"}>
+                      <Link href="/users">
+                        <UserCog
+                          className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"}`}
+                        />
+                        <span
+                          className={`${pathname === "/users" ? "text-[#0B68F7]" : "text-[#5B7189]"} font-semibold`}
+                        >
+                          Usuários
+                        </span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>

@@ -20,7 +20,7 @@ O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedido
 #### Visão Gerencial:
 
 - [ ] A aplicação deve exibir relatórios e/ou gráficos dinâmicos contendo:
-- [ ] Resumo das vendas (total de pedidos, valor faturado, produtos vendidos).
+- [x] Resumo das vendas (total de pedidos, valor faturado, produtos vendidos).
 - [ ] Pedidos pendentes
 - [ ] Clientes mais ativos
 

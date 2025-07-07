@@ -33,8 +33,8 @@ const getStatusLabel = (
   status: (typeof orderStatusEnum.enumValues)[number],
 ) => {
   if (status === "FINISHED") return "Finalizado";
-  if (status === "IN_PREPARATION") return "Em andamento";
-  if (status === "PENDING") return "Cancelado";
+  if (status === "IN_PROGRESS") return "Em andamento";
+  if (status === "CANCELED") return "Cancelado";
   return "";
 };
 
@@ -64,9 +64,8 @@ const OrderList = ({ orders }: OrderListProps) => {
           <CardContent className="space-y-4 p-5">
             <Badge
               className={clsx("", {
-                "bg-red-100 text-red-500": order.status === "PENDING",
-                "bg-yellow-100 text-yellow-500":
-                  order.status === "IN_PREPARATION",
+                "bg-red-100 text-red-500": order.status === "CANCELED",
+                "bg-yellow-100 text-yellow-500": order.status === "IN_PROGRESS",
                 "bg-green-100 text-green-500": order.status === "FINISHED",
               })}
             >

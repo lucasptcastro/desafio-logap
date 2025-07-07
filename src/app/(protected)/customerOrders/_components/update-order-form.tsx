@@ -103,8 +103,8 @@ export const UpdateOrderForm = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="PENDING">Cancelado</SelectItem>
-                    <SelectItem value="IN_PREPARATION">Em andamento</SelectItem>
+                    <SelectItem value="CANCELED">Cancelado</SelectItem>
+                    <SelectItem value="IN_PROGRESS">Em andamento</SelectItem>
                     <SelectItem value="FINISHED">Finalizado</SelectItem>
                   </SelectContent>
                 </Select>

@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { Toaster } from "@/components/ui/sonner";
 
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} ${manrope.variable} antialiased`}>
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </CartProvider>
 
         <Toaster position="bottom-center" richColors theme="light" />
       </body>

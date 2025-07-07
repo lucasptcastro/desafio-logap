@@ -52,7 +52,7 @@ export const createOrder = async (input: CreateOrderInput) => {
   const [createdOrder] = await db
     .insert(order)
     .values({
-      status: "PENDING",
+      status: "IN_PROGRESS",
       customerName: input.customerName,
       customerCpf: removeCpfPunctuation(input.customerCpf),
       total: String(

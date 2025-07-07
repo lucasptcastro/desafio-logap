@@ -7,11 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { order } from "@/db/schema";
 import { cpfMask } from "@/helpers/cpf-mask";
 
-import { CustomerOrdersTableActions } from "./table-actions";
+type PendingOrder = typeof order.$inferSelect;
 
-type CustomerOrder = typeof order.$inferSelect;
-
-export const customerOrdersTableColumns: ColumnDef<CustomerOrder>[] = [
+export const pendingOrdersTableColumns: ColumnDef<PendingOrder>[] = [
   {
     id: "id",
     accessorKey: "id",
@@ -75,13 +73,6 @@ export const customerOrdersTableColumns: ColumnDef<CustomerOrder>[] = [
           {params.row.original.status === "FINISHED" ? "Finalizado" : ""}
         </Badge>
       );
-    },
-  },
-  {
-    id: "actions",
-    cell: (params) => {
-      const order = params.row.original;
-      return <CustomerOrdersTableActions order={order} />;
     },
   },
 ];

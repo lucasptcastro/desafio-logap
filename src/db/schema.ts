@@ -11,8 +11,8 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const orderStatusEnum = pgEnum("OrderStatus", [
-  "PENDING",
-  "IN_PREPARATION",
+  "CANCELED",
+  "IN_PROGRESS",
   "FINISHED",
 ]);
 export const consumptionMethodEnum = pgEnum("ConsumptionMethod", [
@@ -114,7 +114,7 @@ export const product = pgTable("product", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  price: text("price").notNull(),
+  price: integer("price").notNull(),
   imageUrl: text("image_url").notNull(),
   ingredients: text("ingredients").array().notNull(),
   restaurantId: uuid("restaurant_id")
@@ -129,7 +129,7 @@ export const product = pgTable("product", {
 
 export const order = pgTable("order", {
   id: serial("id").primaryKey().notNull(),
-  total: text("total").notNull(),
+  total: integer("total").notNull(),
   status: orderStatusEnum("status").notNull(),
   consumptionMethod: consumptionMethodEnum("consumption_method").notNull(),
   restaurantId: uuid("restaurant_id")
@@ -150,7 +150,7 @@ export const orderProduct = pgTable("order_product", {
     .notNull()
     .references(() => order.id, { onDelete: "cascade" }),
   quantity: integer("quantity").notNull(),
-  price: text("price").notNull(),
+  price: integer("price").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

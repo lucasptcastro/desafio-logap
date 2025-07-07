@@ -15,8 +15,6 @@ interface ProductPageProps {
 }
 
 const ProductPage = async ({ params }: ProductPageProps) => {
-  const slug = "mc-logap"; // O slug do restaurante é fixo, pois não está sendo passado como parâmetro
-
   const { productId } = await params;
 
   // Busca o produto e o restaurante relacionado
@@ -31,7 +29,6 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       restaurant: {
         name: restaurantTable.name,
         avatarImageUrl: restaurantTable.avatarImageUrl,
-        slug: restaurantTable.slug,
       },
     })
     .from(productTable)
@@ -41,15 +38,20 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       eq(productTable.restaurantId, restaurantTable.id),
     );
 
-  const product = productResult[0];
+  const productRaw = productResult[0];
 
-  if (!product) {
+  if (!productRaw) {
     return notFound();
   }
 
-  if (product.restaurant?.slug.toUpperCase() !== slug.toUpperCase()) {
+  if (!productRaw.restaurant) {
     return notFound();
   }
+
+  const product = {
+    ...productRaw,
+    restaurant: productRaw.restaurant,
+  };
 
   return (
     <>

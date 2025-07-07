@@ -11,11 +11,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { product, restaurant } from "@/db/schema";
 
 interface ProductDetailsProps {
-  product: typeof product.$inferSelect & {
+  product: Pick<
+    typeof product.$inferSelect,
+    "id" | "name" | "description" | "imageUrl" | "price" | "ingredients"
+  > & {
     restaurant: Pick<typeof restaurant.$inferSelect, "name" | "avatarImageUrl">;
   };
 }
-
 const ProductDetails = ({ product }: ProductDetailsProps) => {
   const { toggleCart, addProduct } = useContext(CartContext);
 

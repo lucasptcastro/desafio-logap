@@ -1,9 +1,11 @@
 "use client";
 
+import clsx from "clsx";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -60,11 +62,16 @@ const OrderList = ({ orders }: OrderListProps) => {
       {orders.map((order) => (
         <Card key={order.id}>
           <CardContent className="space-y-4 p-5">
-            <div
-              className={`w-fit rounded-full px-2 py-1 text-xs font-semibold text-white ${order.status === orderStatusEnum.enumValues[0] ? "bg-red-500 text-white" : order.status === orderStatusEnum.enumValues[1] ? "bg-[#f7b731] text-white" : "bg-gray-200 text-gray-500"}`}
+            <Badge
+              className={clsx("", {
+                "bg-red-100 text-red-500": order.status === "PENDING",
+                "bg-yellow-100 text-yellow-500":
+                  order.status === "IN_PREPARATION",
+                "bg-green-100 text-green-500": order.status === "FINISHED",
+              })}
             >
               {getStatusLabel(order.status)}
-            </div>
+            </Badge>
 
             <div className="flex items-center gap-2">
               <div className="relative h-5 w-5">

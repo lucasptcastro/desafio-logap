@@ -42,7 +42,7 @@ const items = [
   },
   {
     title: "Pedidos",
-    url: "/orders",
+    url: "/customerOrders",
     icon: ScrollText,
   },
 ];

@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { Badge } from "@/components/ui/badge";
 import { order } from "@/db/schema";
 
+import { cpfMask } from "../helpers/cpf-mask";
 import { CustomerOrdersTableActions } from "./table-actions";
 
 type CustomerOrder = typeof order.$inferSelect;
@@ -17,14 +18,17 @@ export const customerOrdersTableColumns: ColumnDef<CustomerOrder>[] = [
     header: "Nº Pedido",
   },
   {
-    id: "customerCpf",
-    accessorKey: "customerCpf",
-    header: "CPF",
-  },
-  {
     id: "customerName",
     accessorKey: "customerName",
     header: "Cliente",
+  },
+  {
+    id: "customerCpf",
+    accessorKey: "customerCpf",
+    header: "CPF",
+    cell: (params) => {
+      return <span>{cpfMask(params.row.original.customerCpf)}</span>;
+    },
   },
   {
     id: "consumptionMethod",

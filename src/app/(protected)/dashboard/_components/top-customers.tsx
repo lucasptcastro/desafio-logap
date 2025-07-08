@@ -26,7 +26,7 @@ export function TopCustomers({ customers }: TopCustomersProps) {
             </div>
 
             <Link
-              href="/customerOrders"
+              href="/customer-orders"
               className="text-sm font-semibold text-[#9CA7B2]"
             >
               Ver todos

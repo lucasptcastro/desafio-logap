@@ -49,7 +49,7 @@ const items = [
   },
   {
     title: "Pedidos",
-    url: "/customerOrders",
+    url: "/customer-orders",
     icon: ScrollText,
   },
   {

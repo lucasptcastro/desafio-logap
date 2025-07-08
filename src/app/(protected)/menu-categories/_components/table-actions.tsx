@@ -3,7 +3,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { deleteProduct } from "@/actions/delete-product";
+import { deleteMenuCategory } from "@/actions/delete-menu-category";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,33 +25,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { menuCategory, product } from "@/db/schema";
+import { menuCategory as menuCategoriesTable } from "@/db/schema";
 
-import { UpsertProductForm } from "./upsert-product-form";
+import { UpsertMenuCategoryForm } from "./upsert-category-form";
 
-interface ProductsTableActionsProps {
-  product: typeof product.$inferSelect;
-  menuCategories: (typeof menuCategory.$inferSelect)[];
+interface MenuCategoriesTableActionsProps {
+  menuCategory: typeof menuCategoriesTable.$inferSelect;
 }
 
-export const ProductsTableActions = ({
-  product,
-  menuCategories,
-}: ProductsTableActionsProps) => {
+export const MenuCategoriesTableActions = ({
+  menuCategory,
+}: MenuCategoriesTableActionsProps) => {
   const [upsertDialogIsOpen, setUpsertDialogIsOpen] = useState(false);
 
-  const deleteProductAction = useAction(deleteProduct, {
+  const deleteMenuCategoryAction = useAction(deleteMenuCategory, {
     onSuccess: () => {
-      toast.success("Produto deletado com sucesso.");
+      toast.success("Categoria deletada com sucesso.");
     },
     onError: () => {
-      toast.error("Erro ao deletar produto.");
+      toast.error("Erro ao deletar a categoria.");
     },
   });
 
-  const handleDeleteProductClick = () => {
-    if (!product) return;
-    deleteProductAction.execute({ id: product.id });
+  const handleDeleteMenuCategoryClick = () => {
+    if (!menuCategory) return;
+    deleteMenuCategoryAction.execute({ id: menuCategory.id });
   };
 
   return (
@@ -64,7 +62,7 @@ export const ProductsTableActions = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>{product.name}</DropdownMenuLabel>
+            <DropdownMenuLabel>{menuCategory.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setUpsertDialogIsOpen(true)}>
               <EditIcon />
@@ -80,20 +78,20 @@ export const ProductsTableActions = ({
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Tem certeza que deseja deletar esse produto?
+                    Tem certeza que deseja deletar essa categoria?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Essa ação não pode ser revertida. Isso irá deletar o produto
-                    permanentemente.
+                    Essa ação não pode ser revertida. Isso irá deletar a
+                    categoria permanentemente.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={handleDeleteProductClick}
+                    onClick={handleDeleteMenuCategoryClick}
                     className="bg-red-500 text-white hover:bg-red-600"
                   >
-                    {deleteProductAction.isPending ? (
+                    {deleteMenuCategoryAction.isPending ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       "Excluir"
@@ -105,11 +103,10 @@ export const ProductsTableActions = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <UpsertProductForm
+        <UpsertMenuCategoryForm
           onSuccess={() => setUpsertDialogIsOpen(false)}
           isOpen={upsertDialogIsOpen}
-          product={product}
-          menuCategories={menuCategories}
+          menuCategory={menuCategory}
         />
       </Dialog>
     </>

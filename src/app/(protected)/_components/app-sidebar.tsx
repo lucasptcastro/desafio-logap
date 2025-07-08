@@ -8,6 +8,7 @@ import {
   LogOut,
   ScrollText,
   UserCog,
+  UtensilsCrossed,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,6 +56,11 @@ const items = [
     title: "Produtos",
     url: "/products",
     icon: Hamburger,
+  },
+  {
+    title: "Categorias",
+    url: "/menu-categories",
+    icon: UtensilsCrossed,
   },
 ];
 

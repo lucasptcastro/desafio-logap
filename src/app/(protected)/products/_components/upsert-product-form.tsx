@@ -112,6 +112,7 @@ export const UpsertProductForm = ({
     upsertProductAction.execute({
       ...values,
       ingredients: ingredientsArray,
+      id: product?.id,
     });
   }
 

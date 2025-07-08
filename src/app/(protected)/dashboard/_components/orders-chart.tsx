@@ -11,7 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatCurrencyInCents } from "@/helpers/currency";
+import { formatCurrency } from "@/helpers/format-currency";
 
 export const description = "An area chart with gradient fill";
 
@@ -66,7 +66,7 @@ export function OrdersChart({ dailyOrdersData }: OrdersChartProps) {
               <div className="h-3 w-3 rounded bg-[#10B981]" />
               <span className="text-muted-foreground">Faturamento:</span>
               <span className="font-semibold">
-                {formatCurrencyInCents(Number(value))}
+                {formatCurrency(Number(value))}
               </span>
             </>
           );
@@ -81,7 +81,7 @@ export function OrdersChart({ dailyOrdersData }: OrdersChartProps) {
       }}
       labelFormatter={(label, payload) => {
         if (payload && payload[0]) {
-          return dayjs(payload[0].payload?.fulldate).format(
+          return dayjs(payload[0].payload?.fullDate).format(
             "DD/MM/YYYY (dddd)",
           );
         }
@@ -129,7 +129,7 @@ export function OrdersChart({ dailyOrdersData }: OrdersChartProps) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => formatCurrencyInCents(value)}
+              tickFormatter={(value) => formatCurrency(value)}
             />
             {/* Tooltip personalizado para exibir o faturamento e os agendamentos */}
             <ChartTooltip content={CustomTooltip} />

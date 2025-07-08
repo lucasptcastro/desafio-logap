@@ -1,4 +1,3 @@
-import { endOfDay, startOfDay } from "date-fns";
 import dayjs from "dayjs";
 import { and, count, desc, eq, gte, lte, sql, sum } from "drizzle-orm";
 
@@ -11,10 +10,6 @@ interface Params {
 }
 
 export const getDashboard = async ({ from, to }: Params) => {
-  const now = new Date(); // data atual
-  const start = startOfDay(now); // cria uma data no formato 2025-06-18T00:00:00 (horário de início do dia)
-  const end = endOfDay(now); // cria uma data no formato 2025-06-18T23:59:59.999 (horário de fim do dia)
-
   const chartStartDate = dayjs().subtract(10, "days").startOf("day").toDate(); // coleta a data de dias 10 atrás
   const chartEndDate = dayjs().add(10, "days").endOf("day").toDate(); // coleta a data de 10 dias a frente
 
@@ -67,8 +62,8 @@ export const getDashboard = async ({ from, to }: Params) => {
     db.query.order.findMany({
       where: and(
         eq(order.status, "IN_PROGRESS"),
-        gte(order.createdAt, start),
-        lte(order.createdAt, end),
+        gte(order.createdAt, new Date(from)),
+        lte(order.createdAt, new Date(to)),
       ),
       orderBy: desc(order.createdAt),
     }),

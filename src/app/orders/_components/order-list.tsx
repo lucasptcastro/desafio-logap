@@ -76,14 +76,16 @@ const OrderList = ({ orders }: OrderListProps) => {
             <div className="flex items-center gap-2">
               <div className="relative h-5 w-5">
                 <Image
-                  src={order.restaurant.avatarImageUrl}
-                  alt={order.restaurant.name}
+                  alt="Logo MC LogAp"
+                  src="/mc-logap.png"
+                  className="rounded"
                   fill
-                  className="rounded-sm"
                 />
               </div>
 
-              <p className="text-sm font-semibold">{order.restaurant.name}</p>
+              <p className="text-sm font-semibold text-[#1D4382]">
+                {order.restaurant.name}
+              </p>
             </div>
             <Separator />
 

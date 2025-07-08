@@ -43,7 +43,6 @@ const CartProductItem = ({ product }: CartItemProps) => {
           <p className="w-7 text-xs">{product.quantity}</p>
           <Button
             className="h-7 w-7 rounded-lg"
-            variant="destructive"
             onClick={() => increaseProductQuantity(product.id)}
           >
             <ChevronRightIcon />

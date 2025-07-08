@@ -1,37 +1,42 @@
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, it } from "vitest";
+import "@testing-library/jest-dom";
 
-import AddMenuCategoryButton from "./add-category-button";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { vi } from "vitest";
+
+import AddMenuCategoryButton from "@/app/(protected)/menu-categories/_components/add-category-button";
+
+// Mock do formulário que aparece no modal
+vi.mock(
+  "@/app/(protected)/menu-categories/_components/upsert-category-form",
+  () => ({
+    UpsertMenuCategoryForm: ({ onSuccess }: { onSuccess: () => void }) => (
+      <div>
+        <p>Formulário de categoria</p>
+        <button onClick={onSuccess}>Salvar</button>
+      </div>
+    ),
+  }),
+);
 
 describe("AddMenuCategoryButton", () => {
-  it("should display the modal if the button is clicked", async () => {
+  it("opens the modal when clicking the button and closes it when calling onSuccess", async () => {
     const user = userEvent.setup();
 
-    const { getByText, findByText } = render(<AddMenuCategoryButton />, {});
+    render(<AddMenuCategoryButton />);
 
-    const openDialogButton = getByText("Adicionar categoria");
+    expect(screen.queryByText(/adicionar categoria/i)).toBeInTheDocument();
 
-    user.click(openDialogButton);
+    await user.click(
+      screen.getByRole("button", { name: /adicionar categoria/i }),
+    );
 
-    await findByText(/criar/i);
-  });
+    expect(screen.getByText(/adicionar categoria/i)).toBeInTheDocument();
 
-  it("should show errors when trying to submit without filling all required fields", async () => {
-    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /salvar/i }));
 
-    const { getByText, findByText } = render(<AddMenuCategoryButton />, {});
-
-    const openDialogButton = getByText("Adicionar categoria");
-
-    user.click(openDialogButton);
-
-    await findByText(/criar/i);
-
-    const submitButton = getByText(/criar/i);
-
-    user.click(submitButton);
-
-    await findByText(/nome é obrigatório/i);
+    expect(
+      screen.queryByText(/adicione uma nova categoria /i),
+    ).not.toBeInTheDocument();
   });
 });

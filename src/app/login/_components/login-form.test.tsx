@@ -6,16 +6,20 @@ import { LoginForm } from "./login-form";
 
 describe("LoginForm", () => {
   it("should show errors when trying to submit without filling all required fields", async () => {
+    const user = userEvent.setup();
+
     const { getByText, findByText } = render(<LoginForm />, {});
 
     const submitButton = getByText("Entrar");
 
-    userEvent.click(submitButton);
+    user.click(submitButton);
 
     await findByText(/email é obrigatório/i);
   });
 
   it("should show error if email is invalid", async () => {
+    const user = userEvent.setup();
+
     const { getByText, getByPlaceholderText, findByText } = render(
       <LoginForm />,
       {},
@@ -23,11 +27,11 @@ describe("LoginForm", () => {
 
     const emailInput = getByPlaceholderText(/informe seu email/i);
 
-    userEvent.type(emailInput, "invalid_mail");
+    user.type(emailInput, "invalid_mail");
 
     const submitButton = getByText("Entrar");
 
-    userEvent.click(submitButton);
+    user.click(submitButton);
 
     await findByText(/email inválido/i);
   });

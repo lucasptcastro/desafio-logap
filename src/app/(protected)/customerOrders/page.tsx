@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { getUserRole } from "@/actions/get-user-role";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/page-container";
 import { db } from "@/db";
 import { auth } from "@/lib/auth";
+import { authClient } from "@/lib/auth-client";
 
 import { customerOrdersTableColumns } from "./_components/table-columns";
 
@@ -30,6 +32,24 @@ export default async function CustomerOrdersPage() {
 
   if (!session?.user) {
     redirect("/login");
+  }
+
+  const userRole = await getUserRole({ userId: session.user.id });
+
+  if (!userRole?.data) {
+    redirect("/login");
+  }
+
+  const userRoleName = userRole.data[0].roleName.toLowerCase();
+
+  if (userRoleName !== "administrador" && userRoleName !== "vendedor") {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          redirect("/login");
+        },
+      },
+    });
   }
 
   const orders = await db.query.order.findMany();

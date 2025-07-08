@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { getUserRole } from "@/actions/get-user-role";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/page-container";
 import { getDashboard } from "@/data/get-dashboard";
 import { auth } from "@/lib/auth";
+import { authClient } from "@/lib/auth-client";
 
 import { DatePicker } from "./_components/date-picker";
 import { OrdersChart } from "./_components/orders-chart";
@@ -47,7 +49,29 @@ export default async function DashboardPage({
   });
 
   if (!session?.user) {
-    redirect("/authentication");
+    redirect("/login");
+  }
+
+  const userRole = await getUserRole({ userId: session.user.id });
+
+  if (!userRole?.data) {
+    redirect("/login");
+  }
+
+  const userRoleName = userRole.data[0].roleName.toLowerCase();
+
+  if (userRoleName === "vendedor") {
+    redirect("/customerOrders");
+  }
+
+  if (userRoleName !== "administrador") {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          redirect("/login");
+        },
+      },
+    });
   }
 
   const { from, to } = await searchParams;

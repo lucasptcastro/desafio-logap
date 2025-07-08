@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -54,6 +55,9 @@ export function LoginForm() {
         password: values.password,
       },
       {
+        onSuccess: () => {
+          redirect("/dashboard");
+        },
         onError: () => {
           toast.error("Email ou senha inválidos");
         },

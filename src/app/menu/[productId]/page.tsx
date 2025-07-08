@@ -55,7 +55,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
   return (
     <>
-      <div className="flex h-full flex-col">
+      <div className="flex h-screen flex-col">
         <ProductHeader product={product} />
         <ProductDetails product={product} />
       </div>

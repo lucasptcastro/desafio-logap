@@ -9,6 +9,7 @@ import { CartContext } from "@/app/menu/_contexts/cart";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { product, restaurant } from "@/db/schema";
+import { formatCurrency } from "@/helpers/format-currency";
 
 interface ProductDetailsProps {
   product: Pick<
@@ -52,14 +53,14 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           {/* RESTAURANTE */}
           <div className="flex items-center gap-1.5">
             <Image
-              src={product.restaurant.avatarImageUrl}
-              alt={product.restaurant.name}
+              alt="Logo MC LogAp"
+              src="/mc-logap.png"
+              className="rounded"
               width={16}
               height={16}
-              className="rounded-full"
             />
 
-            <p className="text-cs text-muted-foreground">
+            <p className="text-cs font-semibold text-[#1D4382]">
               {product.restaurant.name}
             </p>
           </div>
@@ -69,7 +70,9 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
 
           {/* PREÇO E QUANTIDADE */}
           <div className="mt-3 flex items-center justify-between">
-            <h3 className="text-xl font-semibold">{product.price}</h3>
+            <h3 className="text-xl font-semibold">
+              {formatCurrency(product.price)}
+            </h3>
 
             <div className="flex items-center gap-3 text-center">
               <Button
@@ -81,7 +84,6 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               </Button>
               <p className="w-4">{quantity}</p>
               <Button
-                variant="destructive"
                 className="h-8 w-8 rounded-xl"
                 onClick={handleIncreaseQuantity}
               >

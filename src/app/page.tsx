@@ -17,13 +17,14 @@ const RestaurantPage = async () => {
       {/* Logo do restaurant */}
       <div className="flex flex-col items-center gap-2">
         <Image
-          src={restaurant?.avatarImageUrl}
+          className="rounded"
+          src={"/mc-logap.png"}
           alt={restaurant?.name}
           width={82}
           height={82}
         />
 
-        <h2 className="font-semibold">{restaurant.name}</h2>
+        <h2 className="font-semibold text-[#1D4382]">{restaurant.name}</h2>
       </div>
 
       {/* Bem vindo */}

@@ -28,7 +28,7 @@ const CartSheet = () => {
             <SheetTitle className="text-left">Sacola</SheetTitle>
           </SheetHeader>
 
-          <div className="flex h-full flex-col py-5">
+          <div className="flex h-full flex-col px-2 py-5">
             <div className="flex-auto space-y-3">
               {products.map((product) => (
                 <CartProductItem key={product.id} product={product} />
@@ -47,7 +47,7 @@ const CartSheet = () => {
             </Card>
 
             <Button
-              className="w-full rounded-full"
+              className="w-full rounded"
               onClick={() => setFinishOrderDialogIsOpen(true)}
             >
               Finalizar pedido

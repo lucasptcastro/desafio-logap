@@ -61,7 +61,7 @@ export default async function DashboardPage({
   const userRoleName = userRole.data[0].roleName.toLowerCase();
 
   if (userRoleName === "vendedor") {
-    redirect("/customerOrders");
+    redirect("/customer-orders");
   }
 
   if (userRoleName !== "administrador") {

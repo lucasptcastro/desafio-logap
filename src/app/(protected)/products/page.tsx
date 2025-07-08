@@ -23,10 +23,10 @@ import { db } from "@/db";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 
-import AddUserButton from "./_components/add-user-button";
-import { UsersTableClient } from "./_components/users-table";
+import AddProductButton from "./_components/add-product.button";
+import { ProductsTableClient } from "./_components/products.table";
 
-export default async function UsersPage() {
+export default async function ProductsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -43,11 +43,7 @@ export default async function UsersPage() {
 
   const userRoleName = userRole.data[0].roleName.toLowerCase();
 
-  if (userRoleName === "vendedor") {
-    redirect("/customer-orders");
-  }
-
-  if (userRoleName !== "administrador") {
+  if (userRoleName !== "administrador" && userRoleName !== "vendedor") {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
@@ -57,9 +53,9 @@ export default async function UsersPage() {
     });
   }
 
-  const users = await db.query.usersTable.findMany();
+  const products = await db.query.product.findMany();
 
-  const roles = await db.query.rolesTable.findMany();
+  const menuCategories = await db.query.menuCategory.findMany();
 
   return (
     <PageContainer>
@@ -75,27 +71,28 @@ export default async function UsersPage() {
               <BreadcrumbSeparator className="text-primary" />
               <BreadcrumbItem>
                 <BreadcrumbPage className="text-primary font-semibold">
-                  Usuários
+                  Produtos
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
 
-          <PageTitle>Usuários</PageTitle>
+          <PageTitle>Produtos</PageTitle>
           <PageDescription>
-            Gerencie os usuários cadastrados no sistema
+            Gerencie os produtos disponíveis no sistema
           </PageDescription>
         </PageHeaderContent>
 
         <PageActions>
-          <AddUserButton roles={roles} />
+          <AddProductButton menuCategories={menuCategories} />
         </PageActions>
       </PageHeader>
 
       <PageContent>
-        <div>
-          <UsersTableClient users={users} roles={roles} />
-        </div>
+        <ProductsTableClient
+          products={products}
+          menuCategories={menuCategories}
+        />
       </PageContent>
     </PageContainer>
   );

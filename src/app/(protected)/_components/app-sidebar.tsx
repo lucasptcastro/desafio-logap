@@ -2,11 +2,13 @@
 
 import clsx from "clsx";
 import {
+  Hamburger,
   LayoutDashboard,
   Loader2,
   LogOut,
   ScrollText,
   UserCog,
+  UtensilsCrossed,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,8 +49,18 @@ const items = [
   },
   {
     title: "Pedidos",
-    url: "/customerOrders",
+    url: "/customer-orders",
     icon: ScrollText,
+  },
+  {
+    title: "Produtos",
+    url: "/products",
+    icon: Hamburger,
+  },
+  {
+    title: "Categorias",
+    url: "/menu-categories",
+    icon: UtensilsCrossed,
   },
 ];
 
@@ -159,7 +171,7 @@ export function AppSidebar({ userRoleName }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size={"lg"}>
                   <Avatar>
-                    <AvatarFallback>F</AvatarFallback>
+                    <AvatarFallback></AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm">{session.data?.user.name}</p>

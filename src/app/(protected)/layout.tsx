@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -5,6 +6,11 @@ import { getUserRole } from "@/actions/get-user-role";
 import { AppSidebar } from "@/app/(protected)/_components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
+
+export const metadata: Metadata = {
+  title: "MC LogAp - Administrativo",
+  description: "O restaurante mais tecnológico do RN",
+};
 
 export default async function ProtectedLayout({
   children,

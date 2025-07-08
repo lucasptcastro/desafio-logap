@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import {
+  Hamburger,
   LayoutDashboard,
   Loader2,
   LogOut,
@@ -49,6 +50,11 @@ const items = [
     title: "Pedidos",
     url: "/customerOrders",
     icon: ScrollText,
+  },
+  {
+    title: "Produtos",
+    url: "/products",
+    icon: Hamburger,
   },
 ];
 
@@ -159,7 +165,7 @@ export function AppSidebar({ userRoleName }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size={"lg"}>
                   <Avatar>
-                    <AvatarFallback>F</AvatarFallback>
+                    <AvatarFallback></AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm">{session.data?.user.name}</p>

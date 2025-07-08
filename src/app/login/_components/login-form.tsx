@@ -66,7 +66,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-1/3">
+    <Card className="mx-4 w-full sm:mx-0 sm:w-1/2 xl:w-1/4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <CardHeader>

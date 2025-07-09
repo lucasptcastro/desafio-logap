@@ -34,6 +34,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { getInitials } from "@/helpers/initials";
 import { authClient } from "@/lib/auth-client";
 
 interface AppSidebarProps {
@@ -171,7 +172,9 @@ export function AppSidebar({ userRoleName }: AppSidebarProps) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size={"lg"}>
                   <Avatar>
-                    <AvatarFallback></AvatarFallback>
+                    <AvatarFallback>
+                      {getInitials(session.data?.user.name || "Usuário Admin")}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm">{session.data?.user.name}</p>

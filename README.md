@@ -27,7 +27,7 @@ O setor de vendas de uma empresa precisa de uma ferramenta para gerenciar pedido
 #### Qualidade e Manutenibilidade:
 
 - [x] O projeto deve seguir boas práticas de organização de código e estruturação do repositório.
-- [ ] Deve conter testes unitários e testes de integração para garantir a confiabilidade da aplicação.
+- [x] Deve conter testes unitários e testes de integração para garantir a confiabilidade da aplicação.
 
 ## Tarefa 2: CI/CD
 

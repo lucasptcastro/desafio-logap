@@ -12,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 import { orderStatusEnum } from "@/db/schema";
 import { order, orderProduct, product, restaurant } from "@/db/schema";
 import { formatCurrency } from "@/helpers/format-currency";
-// import { formatCurrency } from "@/helpers/format-currency";
 
 interface OrderListProps {
   orders: Array<

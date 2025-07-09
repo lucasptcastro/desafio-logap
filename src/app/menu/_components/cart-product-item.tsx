@@ -52,6 +52,7 @@ const CartProductItem = ({ product }: CartItemProps) => {
 
       {/* BOTÃO DE DELETAR */}
       <Button
+        data-testid="remove-product-button"
         className="h-7 w-7 rounded-lg"
         variant="outline"
         onClick={() => removeProduct(product.id)}
